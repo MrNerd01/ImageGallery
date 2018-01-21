@@ -42,7 +42,8 @@ import static com.example.swarathesh60.imagegallery.R.id.imageView;
 public class MainActivity extends AppCompatActivity  implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     GridView gridView;
-    ArrayList<File> list;
+    ArrayList<File> list,MultipleFiles;
+
     private Uri filePath;
     private Button btnChoose, btnUpload;
 
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity  implements ActivityCompat.O
         gridView = (GridView) findViewById(R.id.grid);
         btnChoose = (Button) findViewById(R.id.choose);
         btnUpload = (Button) findViewById(R.id.upload);
+
+        MultipleFiles = new ArrayList<>();
 
 
         btnChoose.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +121,8 @@ public class MainActivity extends AppCompatActivity  implements ActivityCompat.O
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                startActivity(new Intent(MainActivity.this,DisplayImage.class).putExtra("img",list.get(position).toString()));
-                filePath = Uri.fromFile(list.get(position));
+                MultipleFiles.add(list.get(position));
+                //filePath = Uri.fromFile(list.get(position));
 
             }
         });
@@ -206,38 +210,45 @@ public class MainActivity extends AppCompatActivity  implements ActivityCompat.O
     }
 
     private void uploadImage() {
+     try {
 
-        if(filePath != null)
-        {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+         for (int i = 0 ; i<MultipleFiles.size();i++) {
+             filePath = Uri.fromFile(MultipleFiles.get(i));
+             if (filePath != null) {
+                 final ProgressDialog progressDialog = new ProgressDialog(this);
+                 progressDialog.setTitle("Uploading...");
+                 progressDialog.show();
 
-            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
-            ref.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(MainActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(MainActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (float)(100.0*(float)taskSnapshot.getBytesTransferred()/(float)taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
-                    });
-        }
+                 StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+                 ref.putFile(filePath)
+                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                             @Override
+                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                 progressDialog.dismiss();
+                                 Toast.makeText(MainActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                             }
+                         })
+                         .addOnFailureListener(new OnFailureListener() {
+                             @Override
+                             public void onFailure(@NonNull Exception e) {
+                                 progressDialog.dismiss();
+                                 Toast.makeText(MainActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         })
+                         .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                             @Override
+                             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                 double progress = (float) (100.0 * (float) taskSnapshot.getBytesTransferred() / (float) taskSnapshot
+                                         .getTotalByteCount());
+                                 progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                             }
+                         });
+             }
+         }
+
+     }catch (Exception e){
+         e.printStackTrace();
+     }
     }
 
     @Override

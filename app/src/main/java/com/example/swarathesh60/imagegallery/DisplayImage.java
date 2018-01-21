@@ -1,18 +1,18 @@
 package com.example.swarathesh60.imagegallery;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
-public class DisplayImage extends AppCompatActivity {
+public class DisplayImage extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_image);
 
-        String img = getIntent().getStringExtra("image_display");
+        String img = getIntent().getStringExtra("img");
 
         ImageView iv = (ImageView) findViewById(R.id.imageView2);
 

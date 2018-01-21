@@ -21,8 +21,7 @@
         </activity>
         <activity
             android:name=".DisplayImage"
-
-             />
+            android:theme="@style/Base.Theme.AppCompat.Dialog.FixedSize"/>
     </application>
 
 </manifest>

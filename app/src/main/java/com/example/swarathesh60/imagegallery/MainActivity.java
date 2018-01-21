@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.example.swarathesh60.imagegallery.R.id.imageView;
+import static com.example.swarathesh60.imagegallery.R.mipmap.ic_launcher;
 
 public class MainActivity extends AppCompatActivity  implements ActivityCompat.OnRequestPermissionsResultCallback{
 
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity  implements ActivityCompat.O
 
     private Uri filePath;
     private Button btnChoose, btnUpload;
+
+
 
 
 
@@ -67,6 +70,10 @@ public class MainActivity extends AppCompatActivity  implements ActivityCompat.O
         btnUpload = (Button) findViewById(R.id.upload);
 
         MultipleFiles = new ArrayList<>();
+
+
+
+
 
 
         btnChoose.setOnClickListener(new View.OnClickListener() {
@@ -121,8 +128,18 @@ public class MainActivity extends AppCompatActivity  implements ActivityCompat.O
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                startActivity(new Intent(MainActivity.this,DisplayImage.class).putExtra("img",list.get(position).toString()));
-                MultipleFiles.add(list.get(position));
-                //filePath = Uri.fromFile(list.get(position));
+
+                if(!MultipleFiles.contains(list.get(position))){
+                    view.setAlpha(0.0f);
+                    MultipleFiles.add(list.get(position));
+                    //filePath = Uri.fromFile(list.get(position));
+                }else{
+                    view.setAlpha(0.1f);
+                    MultipleFiles.remove(list.get(position));
+                }
+
+
+
 
             }
         });
@@ -191,8 +208,8 @@ public class MainActivity extends AppCompatActivity  implements ActivityCompat.O
             Glide.with(MainActivity.this)
                     .load( new File(String.valueOf(Uri.parse(getItem(position).toString()))))
                     .centerCrop()
-                    .placeholder(R.mipmap.ic_launcher)
-                    .error(R.mipmap.ic_launcher)
+                    .placeholder(ic_launcher)
+                    .error(ic_launcher)
                     .into(image);
 
 
